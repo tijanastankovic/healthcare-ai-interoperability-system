@@ -1,13 +1,22 @@
 const { assessRisk } = require('../services/riskService');
 
-function analyzePatient(req, res) {
-  const patient = req.body;
-  const risk = assessRisk(patient);
+async function analyzePatient(req, res) {
+  try {
+    const patient = req.body;
+    const result = await assessRisk(patient);
 
-  res.json({
-    risk,
-    timestamp: new Date().toISOString()
-  });
+    res.json({
+      risk: result.risk,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("ML service error:", error.message);
+
+    res.status(500).json({
+      error: "ML service unavailable"
+    });
+  }
 }
 
 module.exports = {
