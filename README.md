@@ -29,36 +29,36 @@ The project consists of three main components:
                     └──────────┬───────────┘
                                │ REST API
                                ▼
-                ┌────────────────────────────┐
-                │        FHIR Service        │
-                │ Node.js + Express          │
-                │                            │
-                │ • FHIR Validation          │
-                │ • Patient Processing       │
-                │ • History Management       │
-                │ • Swagger Documentation    │
-                └──────────┬─────────────────┘
-                           │ REST API
-                           ▼
-                ┌────────────────────────────┐
-                │         AI Service         │
-                │ Node.js Microservice       │
-                │                            │
-                │ • Risk Workflow            │
-                │ • AI Communication Layer   │
-                │ • Business Logic           │
-                └──────────┬─────────────────┘
-                           │ HTTP Request
-                           ▼
-                ┌────────────────────────────┐
-                │         ML Service         │
-                │ Python + FastAPI           │
-                │ scikit-learn               │
-                │                            │
-                │ • Logistic Regression      │
-                │ • Patient Risk Prediction  │
-                │ • ML API Endpoint          │
-                └────────────────────────────┘
+                  ┌────────────────────────────┐
+                  │        FHIR Service        │
+                  │ Node.js + Express          │
+                  │                            │
+                  │ • FHIR Validation          │
+                  │ • Patient Processing       │
+                  │ • History Management       │
+                  │ • Swagger Documentation    │
+                  └──────────┬─────────────────┘
+                             │ REST API
+                             ▼
+                  ┌────────────────────────────┐
+                  │         AI Service         │
+                  │ Node.js Microservice       │
+                  │                            │
+                  │ • Risk Workflow            │
+                  │ • AI Communication Layer   │
+                  │ • Business Logic           │
+                  └──────────┬─────────────────┘
+                             │ HTTP Request
+                             ▼
+                  ┌────────────────────────────┐
+                  │         ML Service         │
+                  │ Python + FastAPI           │
+                  │ scikit-learn               │
+                  │                            │
+                  │ • Logistic Regression      │
+                  │ • Patient Risk Prediction  │
+                  │ • ML API Endpoint          │
+                  └────────────────────────────┘
 
 ## Machine Learning Model
 
