@@ -62,7 +62,15 @@ The project consists of three main components:
 
 ## Machine Learning Model
 
-The ML microservice uses Logistic Regression implemented with scikit-learn.
+The ML microservice trains and compares multiple classification models using scikit-learn.
+
+Evaluated models:
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- Support Vector Machine (SVM)
+
+The best-performing model is saved as `model.pkl` and used by the ML service for patient risk prediction.
 
 Input features:
 - Age
@@ -73,8 +81,6 @@ Prediction output:
 - LOW risk
 - MEDIUM risk
 - HIGH risk
-
-The ML model is exposed through a FastAPI REST endpoint and integrated into the AI workflow.
 
 ## Technologies
 
