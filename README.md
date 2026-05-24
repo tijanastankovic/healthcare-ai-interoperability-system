@@ -71,6 +71,7 @@ Input features:
 
 Prediction output:
 - LOW risk
+- MEDIUM risk
 - HIGH risk
 
 The ML model is exposed through a FastAPI REST endpoint and integrated into the AI workflow.
