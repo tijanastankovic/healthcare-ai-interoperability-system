@@ -22,6 +22,59 @@ The project consists of three main components:
   - Performs patient risk analysis
   - Returns risk classification results
 
+                    ┌──────────────────────┐
+                    │      Frontend        │
+                    │ HTML / CSS / JS UI   │
+                    │ Patient Interface    │
+                    └──────────┬───────────┘
+                               │ REST API
+                               ▼
+                ┌────────────────────────────┐
+                │        FHIR Service        │
+                │ Node.js + Express          │
+                │                            │
+                │ • FHIR Validation          │
+                │ • Patient Processing       │
+                │ • History Management       │
+                │ • Swagger Documentation    │
+                └──────────┬─────────────────┘
+                           │ REST API
+                           ▼
+                ┌────────────────────────────┐
+                │         AI Service         │
+                │ Node.js Microservice       │
+                │                            │
+                │ • Risk Workflow            │
+                │ • AI Communication Layer   │
+                │ • Business Logic           │
+                └──────────┬─────────────────┘
+                           │ HTTP Request
+                           ▼
+                ┌────────────────────────────┐
+                │         ML Service         │
+                │ Python + FastAPI           │
+                │ scikit-learn               │
+                │                            │
+                │ • Logistic Regression      │
+                │ • Patient Risk Prediction  │
+                │ • ML API Endpoint          │
+                └────────────────────────────┘
+
+## Machine Learning Model
+
+The ML microservice uses Logistic Regression implemented with scikit-learn.
+
+Input features:
+- Age
+- Blood Pressure
+- Cholesterol
+
+Prediction output:
+- LOW risk
+- HIGH risk
+
+The ML model is exposed through a FastAPI REST endpoint and integrated into the AI workflow.
+
 ## Technologies
 
 ### Frontend
