@@ -168,6 +168,10 @@ Mongoose is used as the ODM layer for communication between the FHIR service and
 
 ## Project Structure
 
+## Project Structure
+
+## Project Structure
+
 ```text
 project/
 │
@@ -177,22 +181,12 @@ project/
 │   └── index.html
 │
 ├── backend/
-│   ├── fhir-service/
-│   │   ├── database/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── fhirService.js
-│   │
 │   ├── ai-service/
-│   │   └── aiService.js
-│   │
+│   ├── fhir-service/
 │   └── ml-service/
-│       ├── app.py
-│       ├── train_model.py
-│       └── model.pkl
 │
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
