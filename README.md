@@ -2,26 +2,47 @@
 
 ## Overview
 
-FHIR-Based Healthcare AI System is a modular healthcare platform that combines HL7 FHIR interoperability standards with AI-based patient risk assessment.
+Healthcare AI Interoperability System is a modular healthcare platform that combines HL7 FHIR interoperability standards with artificial intelligence and machine learning techniques for patient risk assessment.
 
-The system uses a microservice architecture with separate frontend, FHIR, and AI services communicating through REST APIs.
+The system is designed using a microservice architecture where separate frontend, interoperability, AI, and ML components communicate through REST APIs. The platform enables standardized healthcare data exchange, patient analysis, machine learning prediction, and persistent storage of patient history.
 
-## Architecture
+The project demonstrates the integration of healthcare interoperability concepts with intelligent analytical services through a lightweight MVP architecture.
 
-The project consists of three main components:
+---
 
-- Frontend Application
-  - User interface for patient data input and risk visualization
+## System Architecture
 
-- FHIR Service
-  - Handles healthcare interoperability
-  - Validates and transforms FHIR patient data
-  - Communicates with the AI service
+The system consists of four main components:
 
-- AI Service
-  - Performs patient risk analysis
-  - Returns risk classification results
+### Frontend Application
+- User interface for patient data input
+- Risk visualization and patient history display
+- Patient loading from database
 
+### FHIR Service
+- Handles healthcare interoperability
+- Validates and transforms FHIR patient resources
+- Manages communication with AI service
+- Stores patient data in MongoDB
+- Provides Swagger/OpenAPI documentation
+
+### AI Service
+- Acts as the analytical orchestration layer
+- Processes standardized healthcare data
+- Communicates with the ML microservice
+- Organizes patient risk analysis workflow
+
+### ML Service
+- Python FastAPI microservice
+- Uses trained scikit-learn models
+- Executes patient risk prediction
+- Returns LOW / MEDIUM / HIGH risk classification
+
+---
+
+## Architecture Diagram
+
+```text
                     ┌──────────────────────┐
                     │      Frontend        │
                     │ HTML / CSS / JS UI   │
@@ -35,7 +56,7 @@ The project consists of three main components:
                   │                            │
                   │ • FHIR Validation          │
                   │ • Patient Processing       │
-                  │ • History Management       │
+                  │ • MongoDB Integration      │
                   │ • Swagger Documentation    │
                   └──────────┬─────────────────┘
                              │ REST API
@@ -56,31 +77,60 @@ The project consists of three main components:
                   │ scikit-learn               │
                   │                            │
                   │ • Logistic Regression      │
-                  │ • Patient Risk Prediction  │
-                  │ • ML API Endpoint          │
+                  │ • Decision Tree            │
+                  │ • Random Forest            │
+                  │ • SVM                      │
+                  │ • Risk Prediction          │
+                  └──────────┬─────────────────┘
+                             │
+                             ▼
+                  ┌────────────────────────────┐
+                  │          MongoDB           │
+                  │     Patient Storage        │
+                  │     Analysis History       │
                   └────────────────────────────┘
+```
+
+---
 
 ## Machine Learning Model
 
-The ML microservice trains and compares multiple classification models using scikit-learn.
+The ML microservice performs patient risk prediction using supervised machine learning methods implemented with the scikit-learn library.
 
-Evaluated models:
+The system evaluates multiple classification algorithms:
+
 - Logistic Regression
 - Decision Tree
 - Random Forest
 - Support Vector Machine (SVM)
 
-The best-performing model is saved as `model.pkl` and used by the ML service for patient risk prediction.
+The best-performing model is automatically selected, saved as `model.pkl`, and used by the ML service during prediction.
 
-Input features:
+### Input Features
 - Age
 - Blood Pressure
 - Cholesterol
 
-Prediction output:
+### Prediction Output
 - LOW risk
 - MEDIUM risk
 - HIGH risk
+
+---
+
+## Database Integration
+
+MongoDB is used for persistent storage of patient analysis data.
+
+The database stores:
+- Patient personal information
+- Health parameters
+- Risk prediction results
+- Analysis timestamps
+
+Mongoose is used as the ODM layer for communication between the FHIR service and MongoDB.
+
+---
 
 ## Technologies
 
@@ -94,8 +144,19 @@ Prediction output:
 - Express.js
 
 ### AI Layer
-- JavaScript-based risk analysis
-- Planned ML model integration
+- Node.js AI orchestration service
+- REST communication workflow
+
+### Machine Learning
+- Python
+- FastAPI
+- scikit-learn
+- pandas
+- joblib
+
+### Database
+- MongoDB
+- Mongoose
 
 ### Standards & Tools
 - HL7 FHIR
@@ -103,46 +164,80 @@ Prediction output:
 - Swagger/OpenAPI
 - Git & GitHub
 
+---
+
 ## Project Structure
 
 ```text
 project/
 │
 ├── frontend/
+│   ├── css/
+│   ├── js/
+│   └── index.html
 │
 ├── backend/
 │   ├── fhir-service/
-│   └── ai-service/
+│   │   ├── database/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── fhirService.js
+│   │
+│   ├── ai-service/
+│   │   └── aiService.js
+│   │
+│   └── ml-service/
+│       ├── app.py
+│       ├── train_model.py
+│       └── model.pkl
 │
 ├── package.json
 └── README.md
 ```
 
+---
+
 ## Running the System
 
-### 1. Install dependencies
+### 1. Start MongoDB
 
 ```bash
-npm install
+brew services start mongodb-community
 ```
 
-### 2. Start FHIR service
+### 2. Start ML Service
 
 ```bash
-cd backend/fhir-service
-node fhirService.js
+cd backend/ml-service
+python3 -m uvicorn app:app --reload --port 5000
 ```
 
-### 3. Start AI service
+### 3. Start AI Service
 
 ```bash
 cd backend/ai-service
 node aiService.js
 ```
 
-### 4. Open frontend
+### 4. Start FHIR Service
 
-Open `frontend/index.html` in browser.
+```bash
+cd backend/fhir-service
+node fhirService.js
+```
+
+### 5. Open Frontend
+
+Open:
+
+```text
+frontend/index.html
+```
+
+in the browser.
+
+---
 
 ## API Endpoints
 
@@ -154,19 +249,31 @@ Open `frontend/index.html` in browser.
 POST /fhir/patient
 ```
 
+Processes FHIR patient data and executes AI-based risk analysis.
+
+---
+
 #### Get Patient
 
 ```http
 GET /fhir/patient/:id
 ```
 
-#### Get History
+Loads patient information from MongoDB using patient ID.
+
+---
+
+#### Get Patient History
 
 ```http
 GET /fhir/history
 ```
 
-## Swagger Documentation
+Returns stored patient analysis history.
+
+---
+
+## Swagger/OpenAPI Documentation
 
 FHIR API documentation is available at:
 
@@ -174,14 +281,38 @@ FHIR API documentation is available at:
 http://localhost:3000/api-docs
 ```
 
+The documentation includes:
+- endpoint descriptions,
+- request examples,
+- response schemas,
+- API testing interface.
+
+---
+
+## System Features
+
+- HL7 FHIR patient processing
+- AI-assisted patient analysis
+- ML-based risk prediction
+- MongoDB patient storage
+- Patient history tracking
+- Dynamic risk visualization
+- Swagger/OpenAPI API documentation
+- Modular microservice architecture
+
+---
+
 ## Future Improvements
 
-- Integration of machine learning models
-- Database support
+- Integration with real healthcare datasets
+- Advanced machine learning models
 - Docker containerization
 - Authentication and authorization
-- Real FHIR resource support
+- Expanded FHIR resource support
 - Advanced healthcare analytics
+- Deployment to cloud infrastructure
+
+---
 
 ## Author
 
