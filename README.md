@@ -104,7 +104,7 @@ The system evaluates multiple classification algorithms:
 - Random Forest
 - Support Vector Machine (SVM)
 
-The best-performing model is automatically selected, saved as `model.pkl`, and used by the ML service during prediction.
+The best-performing model is automatically selected and used by the ML service during prediction. Based on model evaluation, Decision Tree achieved the best performance and was saved as `model.pkl`.
 
 ### Input Features
 - Age
