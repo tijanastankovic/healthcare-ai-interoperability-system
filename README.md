@@ -168,10 +168,6 @@ Mongoose is used as the ODM layer for communication between the FHIR service and
 
 ## Project Structure
 
-## Project Structure
-
-## Project Structure
-
 ```text
 project/
 │
