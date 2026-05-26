@@ -37,6 +37,8 @@ async function loadPatient() {
 
   const data = await getPatient(id);
 
+  console.log("Loaded patient: ", data);
+
   renderLoadedPatient(data);
 }
 

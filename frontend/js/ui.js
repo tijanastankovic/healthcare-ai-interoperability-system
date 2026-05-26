@@ -23,8 +23,13 @@ function renderAnalyzeResult(patientName, risk, patientId) {
 function renderLoadedPatient(data) {
   const resultDiv = document.getElementById("loadResult");
 
-  const firstName = data.name?.[0]?.given?.[0] || "Unknown";
-  const lastName = data.name?.[0]?.family || "";
+  const firstName = data.firstName || "Unknown";
+  const lastName = data.lastName || "";
+
+  document.getElementById("name").value = firstName;
+  document.getElementById("surname").value = lastName;
+  document.getElementById("bp").value = data.bloodPressure || "";
+  document.getElementById("chol").value = data.cholesterol || "";
 
   const className = getRiskClass(data.risk || "LOW");
 
@@ -51,8 +56,9 @@ function renderHistory(data) {
     div.classList.add(color);
 
     div.innerHTML = `
-      <b>${item.patient}</b><br>
-      Risk: ${item.risk}
+      <b>${item.firstName} ${item.lastName}</b><br>
+      Risk: ${item.risk}<br>
+      ID: ${item._id}
     `;
 
     list.appendChild(div);

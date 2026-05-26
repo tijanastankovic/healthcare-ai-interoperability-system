@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { patientsDB, history } = require('../storage/memoryStorage');
 const { validatePatient } = require('../validators/patientValidator');
 const { generateRandomPatient, calculateAge } = require('../utils/patientUtils');
 const { analyzeRisk } = require('../services/aiClientService');
+const { patientsDB } = require('../storage/memoryStorage');
+
+const Patient = require('../models/Patient');
 
 // POST /fhir/patient
 router.post('/patient', async (req, res) => {
@@ -29,12 +31,6 @@ router.post('/patient', async (req, res) => {
 
     console.log(`[${new Date().toISOString()}] AI response:`, result);
 
-    history.push({
-      timestamp: new Date().toISOString(),
-      patient: patient.name?.[0]?.given?.[0] || "Unknown",
-      risk: result.risk
-    });
-
     const newId = Date.now().toString();
 
     patientsDB[newId] = {
@@ -42,6 +38,15 @@ router.post('/patient', async (req, res) => {
       id: newId,
       risk: result.risk
     };
+
+    await Patient.create({
+      firstName: patient.name?.[0]?.given?.[0] || "Unknown",
+      lastName: patient.name?.[0]?.family || "Unknown",
+      age: transformedData.age,
+      bloodPressure: transformedData.bloodPressure,
+      cholesterol: transformedData.cholesterol,
+      risk: result.risk
+    });
 
     res.json({
       status: "Processed",
@@ -60,21 +65,37 @@ router.post('/patient', async (req, res) => {
 });
 
 // GET /fhir/patient/:id
-router.get('/patient/:id', (req, res) => {
-  const id = req.params.id;
+router.get('/patient/:id', async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
 
-  let patient = patientsDB[id];
+    if (!patient) {
+      return res.status(404).json({
+        error: "Patient not found"
+      });
+    }
 
-  if (!patient) {
-    patient = generateRandomPatient(id);
+    res.status(200).json(patient);
+  } catch (err) {
+    res.status(500).json({
+      error: "Unable to load patient"
+    });
   }
-
-  res.status(200).json(patient);
 });
 
 // GET /fhir/history
-router.get('/history', (req, res) => {
-  res.json(history);
+router.get('/history', async (req, res) => {
+  try {
+    const patients = await Patient.find().sort({ createdAt: -1 });
+
+    res.json(patients);
+  } catch (err) {
+    console.error("Error fetching patient history:", err.message);
+
+    res.status(500).json({
+      error: "Unable to fetch patient history"
+    });
+  }
 });
 
 module.exports = router;

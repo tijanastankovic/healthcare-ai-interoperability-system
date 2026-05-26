@@ -5,6 +5,9 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const patientRoutes = require('./routes/patientRoutes');
+const connectDB = require('./database/db');
+
+connectDB();
 
 const options = {
   definition: {
