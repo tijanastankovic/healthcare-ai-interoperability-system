@@ -13,18 +13,22 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "FHIR-Based Healthcare Interoperability System",
+      title:
+        "FHIR-Based Healthcare Interoperability System",
       version: "1.0.0",
-      description: "API for exchanging FHIR patient data and performing AI-based risk analysis"
+      description:
+        "API for exchanging FHIR patient data and performing AI-based risk analysis"
     },
     tags: [
       {
         name: "Patient",
-        description: "Operations related to patient data"
+        description:
+          "Operations related to patient data"
       }
     ]
   },
-  apis: ["./fhirService.js"],
+
+  apis: ["./routes/patientRoutes.js"]
 };
 
 const swaggerSpec = swaggerJsdoc(options);

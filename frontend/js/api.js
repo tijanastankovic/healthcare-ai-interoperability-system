@@ -22,3 +22,26 @@ async function getHistory() {
   const res = await fetch(`${API_BASE}/fhir/history`);
   return await res.json();
 }
+
+// DELETE PATIENT
+async function deletePatient(id) {
+  const url =
+    `http://localhost:3000/fhir/patient/${encodeURIComponent(id)}`;
+
+  console.log("DELETE URL:", url);
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json"
+    }
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Unable to delete patient");
+  }
+
+  return data;
+}

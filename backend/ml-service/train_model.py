@@ -9,18 +9,33 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
+df = pd.read_csv("dataset/heart.csv")
 
-data = {
-    "age": [25, 35, 45, 55, 65, 70, 30, 50, 60, 40, 75, 52],
-    "bloodPressure": [110, 120, 130, 145, 160, 170, 115, 140, 155, 125, 180, 150],
-    "cholesterol": [4.2, 4.8, 5.3, 6.1, 6.8, 7.2, 4.5, 5.9, 6.4, 5.0, 7.5, 6.2],
-    "risk": ["LOW", "LOW", "LOW", "MEDIUM", "HIGH", "HIGH", "LOW", "MEDIUM", "HIGH", "LOW", "HIGH", "MEDIUM"]
-}
+features = [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal"
+]
 
-df = pd.DataFrame(data)
+X = df[features].rename(columns={
+    "trestbps": "bloodPressure",
+    "chol": "cholesterol"
+})
 
-X = df[["age", "bloodPressure", "cholesterol"]]
-y = df["risk"]
+y = df["target"].map({
+    0: "LOW",
+    1: "HIGH"
+})
 
 X_train, X_test, y_train, y_test = train_test_split(
     X,
@@ -31,7 +46,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 models = {
-    "Logistic Regression": LogisticRegression(max_iter=1000),
+    "Logistic Regression": LogisticRegression(max_iter=2000),
     "Decision Tree": DecisionTreeClassifier(random_state=42),
     "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
     "SVM": SVC()

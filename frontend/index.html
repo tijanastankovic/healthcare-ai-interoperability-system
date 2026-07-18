@@ -3,21 +3,131 @@
 <head>
   <title>Healthcare AI System</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- ANALYZE -->
 <div class="card">
-  <h2><i class="fa-solid fa-heart-pulse"></i> Analyze Patient</h2>
+  <h2><i class="fa-solid fa-heart-pulse"></i>Analyze Patient</h2>
 
-  <input id="name" placeholder="Name">
-  <input id="surname" placeholder="Surname">
-  <input id="birthDate" type="date">
-  <input id="bp" placeholder="Blood Pressure">
-  <input id="chol" placeholder="Cholesterol">
+  <div class="field">
+    <label>Name</label>
+    <input id="name" placeholder="Enter name">
+  </div>
 
+  <div class="field">
+    <label>Surname</label>
+    <input id="surname" placeholder="Enter surname">
+  </div>
+
+  <div class="field full">
+    <label>Date of Birth</label>
+    <input id="birthDate" type="date">
+  </div>
+
+  <div class="field">
+    <label>Blood Pressure (mm Hg)</label>
+    <input id="bp" placeholder="e.g. 120">
+  </div>
+
+  <div class="field">
+    <label>Cholesterol (mg/dL)</label>
+    <input id="chol" placeholder="e.g. 180">
+  </div>
+  
+  <div class="field">
+    <label>Gender</label>
+    <select id="sex">
+    <option value="">Choose option</option>
+    <option value="1">Male</option>
+    <option value="0">Female</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Chest Pain Type</label>
+    <select id="cp">
+    <option value="">Choose option</option>
+    <option value="0">Typical Angina</option>
+    <option value="1">Atypical Angina</option>
+    <option value="2">Non-anginal Pain</option>
+    <option value="3">Asymptomatic</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Fasting Blood Sugar</label>
+    <select id="fbs">
+    <option value="">Choose option</option>
+    <option value="0">Lower than 120 mg/dL</option>
+    <option value="1">Greater than 120 mg/dL</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label for="restecg">Resting ECG</label>
+    <select id="restecg" required>
+    <option value="" selected disabled>Select ECG result</option>
+    <option value="0">Normal</option>
+    <option value="1">ST-T Wave Abnormality</option>
+    <option value="2">Left Ventricular Hypertrophy</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Max Heart Rate</label>
+    <input id="thalach" type="number" placeholder="e.g. 170" />
+  </div>
+
+  <div class="field">
+    <label> Exercise Induced Angina</label>
+    <select id="exang">
+    <option value="">Choose option</option>
+    <option value="0">No</option>
+    <option value="1">Yes</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Oldpeak</label>
+    <input id="oldpeak" type="number" step="0.1" placeholder="e.g. 0.2" />
+  </div>
+  
+  <div class="field">
+    <label>ST Slope</label>
+    <select id="slope">
+    <option value="">Choose option</option>
+    <option value="0">Upsloping</option>
+    <option value="1">Flat</option>
+    <option value="2">Downsloping</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Affected Vessels</label>
+    <select id="ca">
+    <option value="">Select number</option>
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+  </div>
+
+  <div class="field">
+    <label>Thalassemia</label>
+    <select id="thal">
+    <option value="">Choose option</option>
+    <option value="0">Unknown</option>
+    <option value="1">Normal</option>
+    <option value="2">Fixed Defect</option>
+    <option value="3">Reversible Defect</option>
+  </select>
+  </div>
+  
   <button onclick="send()">Analyze</button>
 
   <div id="analyzeResult"></div>
@@ -25,7 +135,7 @@
 
 <!-- LOAD -->
 <div class="card">
-  <h2><i class="fa-solid fa-folder-open"></i> Load Patient</h2>
+  <h2><i class="fa-solid fa-folder-open"></i>Load Patient</h2>
 
   <input id="loadId" placeholder="Enter Patient ID">
 
@@ -36,11 +146,19 @@
 
 <!-- HISTORY -->
 <div class="card wide">
-  <h2><i class="fa-solid fa-chart-line"></i> Patient History</h2>
+  <h2><i class="fa-solid fa-chart-line"></i>Patient History</h2>
 
   <button onclick="loadHistory()">Refresh</button>
 
   <div id="historyList"></div>
+</div>
+
+<div id="patientModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closePatientModal()">&times;</span>
+    <h2>Patient Details</h2>
+    <div id="patientDetails"></div>
+  </div>
 </div>
 
 <script src="js/api.js"></script>
