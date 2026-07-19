@@ -6,6 +6,46 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
+<div
+  id="deleteConfirmModal"
+  class="delete-confirm-overlay hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="deleteConfirmTitle"
+>
+  <div class="delete-confirm-card">
+    <div class="delete-confirm-icon">!</div>
+
+    <h3 id="deleteConfirmTitle">
+      Delete Patient?
+    </h3>
+
+    <p>
+      Are you sure you want to permanently
+      delete this patient? This action can not
+      be undone.
+    </p>
+
+    <div class="delete-confirm-actions">
+      <button
+        id="cancelDeleteButton"
+        type="button"
+        class="delete-confirm-button cancel"
+      >
+        Cancel
+      </button>
+
+      <button
+        id="confirmDeleteButton"
+        type="button"
+        class="delete-confirm-button delete"
+      >
+        Delete Patient
+      </button>
+    </div>
+  </div>
+</div>
+
 <body>
 
 <!-- ANALYZE -->

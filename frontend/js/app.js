@@ -366,9 +366,8 @@ async function loadHistory() {
 
 // DELETE PATIENT
 async function removePatient(id) {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this patient?"
-  );
+  const confirmed =
+    await showDeleteConfirmation();
 
   if (!confirmed) {
     return;
@@ -391,3 +390,73 @@ async function removePatient(id) {
     window.alert(err.message);
   }
 }
+
+let deleteConfirmationResolver = null;
+
+function showDeleteConfirmation() {
+  const modal = document.getElementById(
+    "deleteConfirmModal"
+  );
+
+  modal.classList.remove("hidden");
+
+  document
+    .getElementById("cancelDeleteButton")
+    .focus();
+
+  return new Promise(resolve => {
+    deleteConfirmationResolver = resolve;
+  });
+}
+
+function resolveDeleteConfirmation(confirmed) {
+  const modal = document.getElementById(
+    "deleteConfirmModal"
+  );
+
+  modal.classList.add("hidden");
+
+  if (deleteConfirmationResolver) {
+    deleteConfirmationResolver(confirmed);
+    deleteConfirmationResolver = null;
+  }
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+    const modal = document.getElementById(
+      "deleteConfirmModal"
+    );
+
+    document
+      .getElementById("cancelDeleteButton")
+      .addEventListener("click", () => {
+        resolveDeleteConfirmation(false);
+      });
+
+    document
+      .getElementById("confirmDeleteButton")
+      .addEventListener("click", () => {
+        resolveDeleteConfirmation(true);
+      });
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) {
+        resolveDeleteConfirmation(false);
+      }
+    });
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        if (
+          event.key === "Escape" &&
+          !modal.classList.contains("hidden")
+        ) {
+          resolveDeleteConfirmation(false);
+        }
+      }
+    );
+  }
+);
