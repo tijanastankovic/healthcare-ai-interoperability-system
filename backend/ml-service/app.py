@@ -7,6 +7,17 @@ app = FastAPI()
 
 model = joblib.load("model.pkl")
 
+print(
+    "Loaded model:",
+    type(model).__name__,
+    flush=True
+)
+
+print(
+    "Model classes:",
+    model.classes_,
+    flush=True
+)
 
 class PatientData(BaseModel):
     age: int
@@ -42,8 +53,19 @@ def predict(data: PatientData):
         "thal": data.thal
     }])
 
-    prediction = model.predict(input_data)[0]
+    probabilities = model.predict_proba(input_data)[0]
+
+    high_index = list(model.classes_).index("HIGH")
+    high_probability = float(probabilities[high_index])
+
+    if high_probability < 0.33:
+        risk = "LOW"
+    elif high_probability < 0.66:
+        risk = "MEDIUM"
+    else:
+        risk = "HIGH"
 
     return {
-        "risk": prediction
+        "risk": risk,
+        "probability": round(high_probability, 4)
     }

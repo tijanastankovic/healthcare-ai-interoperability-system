@@ -191,6 +191,18 @@ button:hover {
   background: transparent !important;
 }
 
+.result.error {
+  background-color: #991f1f;
+  color: #ffffff;
+  border: none;
+  text-align: center;
+  font-weight: 700;
+}
+
+.result.error div {
+  color: #ffffff;
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -331,6 +343,25 @@ button:hover {
 .modal-close:hover {
   color: #22c55e;
 } 
+
+.history-main {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr) 82px;
+  align-items: center;
+  column-gap: 18px;
+  width: 100%;
+}
+
+.history-left,
+.history-right {
+  min-width: 0;
+}
+
+.details-btn {
+  width: 82px;
+  margin-left: 0;
+  justify-self: end;
+}
 
 @media (max-width: 1200px) {
   body {

@@ -153,9 +153,17 @@ router.post("/patient", async (req, res) => {
     JSON.stringify(bundle, null, 2)
   );
 
-  if (!validateBundle(bundle)) {
+  const validationResult =
+  validateBundle(bundle);
+
+  if (!validationResult.valid) {
+    console.warn(
+      "FHIR Bundle validation failed:",
+      validationResult.error
+    );
+
     return res.status(400).json({
-      error: "Invalid FHIR Bundle"
+      error: validationResult.error
     });
   }
 

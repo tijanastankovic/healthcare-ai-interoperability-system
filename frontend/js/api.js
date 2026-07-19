@@ -1,14 +1,49 @@
 const API_BASE = "http://localhost:3000";
 
+async function parseApiResponse(
+  response,
+  fallbackMessage
+) {
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+    const message =
+      data.error ||
+      data.issue?.[0]?.diagnostics ||
+      fallbackMessage;
+
+    const error = new Error(message);
+    error.isUserSafe = true;
+
+    throw error;
+  }
+
+  return data;
+}
+
 // SEND PATIENT
 async function analyzePatient(data) {
-  const res = await fetch(`${API_BASE}/fhir/patient`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+  const response = await fetch(
+    "http://localhost:3000/fhir/patient",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }
+  );
 
-  return await res.json();
+  return parseApiResponse(
+    response,
+    "Unable to process the patient data."
+  );
 }
 
 // LOAD PATIENT

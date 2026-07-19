@@ -45,20 +45,139 @@ function clearAnalyzeResult() {
   resultBox.style.display = "none";
 }
 
+function renderAnalyzeError(message) {
+  const resultDiv =
+    document.getElementById("analyzeResult");
+
+  resultDiv.style.display = "block";
+  resultDiv.className = "result error";
+  resultDiv.replaceChildren();
+
+  const messageElement =
+    document.createElement("div");
+
+  messageElement.textContent = message;
+
+  resultDiv.appendChild(messageElement);
+}
+
+function validateAnalyzeForm() {
+  const requiredFields = [
+    {
+      id: "name",
+      message:
+        "The patient must contain a valid given name."
+    },
+    {
+      id: "surname",
+      message:
+        "The patient must contain a valid family name."
+    },
+    {
+      id: "sex",
+      message:
+        "The patient must contain a valid gender."
+    },
+    {
+      id: "birthDate",
+      message:
+        "The patient must contain a valid birth date."
+    },
+    {
+      id: "bp",
+      message:
+        "The patient must contain a valid blood pressure."
+    },
+    {
+      id: "chol",
+      message:
+        "The patient must contain a valid cholesterol value."
+    },
+    {
+      id: "cp",
+      message:
+        "The patient must contain a valid chest pain type."
+    },
+    {
+      id: "fbs",
+      message:
+        "The patient must contain a valid fasting blood sugar value."
+    },
+    {
+      id: "restecg",
+      message:
+        "The patient must contain a valid resting ECG result."
+    },
+    {
+      id: "thalach",
+      message:
+        "The patient must contain a valid maximum heart rate."
+    },
+    {
+      id: "exang",
+      message:
+        "The patient must contain a valid exercise angina value."
+    },
+    {
+      id: "oldpeak",
+      message:
+        "The patient must contain a valid oldpeak value."
+    },
+    {
+      id: "slope",
+      message:
+        "The patient must contain a valid ST slope."
+    },
+    {
+      id: "ca",
+      message:
+        "The patient must contain a valid affected vessels value."
+    },
+    {
+      id: "thal",
+      message:
+        "The patient must contain a valid thalassemia result."
+    }
+  ];
+
+  for (const field of requiredFields) {
+    const input =
+      document.getElementById(field.id);
+
+    if (
+      !input ||
+      input.value.trim() === ""
+    ) {
+      renderAnalyzeError(field.message);
+      input?.focus();
+
+      return false;
+    }
+  }
+
+  return true;
+}
+
 // ANALYZE
 async function send() {
+  clearAnalyzeResult();
+
+  if (!validateAnalyzeForm()) {
+    return;
+  }
+
+  const birthDate =
+    document.getElementById("birthDate").value;
+
+  const restecgValue =
+    document.getElementById("restecg").value;
+
   const patientId = crypto.randomUUID();
   const patientReference = `urn:uuid:${patientId}`;
 
-  const sex = Number(document.getElementById("sex").value);
-
-  const restecgValue =
-  document.getElementById("restecg").value;
-
-  if (restecgValue === "") {
-    window.alert("Please select the resting ECG result.");
-    return;
-  }
+  const sex = Number(
+    document.getElementById("sex").value
+  );
 
   const data = {
     resourceType: "Bundle",
@@ -79,7 +198,7 @@ async function send() {
             }
           ],
           gender: sex === 1 ? "male" : "female",
-          birthDate: document.getElementById("birthDate").value
+          birthDate: birthDate
         }
       },
 
@@ -188,21 +307,41 @@ async function send() {
     ]
   };
 
-  const result = await analyzePatient(data);
+  try {
+    const result = await analyzePatient(data);
 
-  const risk = result.result.risk;
+    const risk =
+      result.result?.risk || result.risk;
 
-  lastPatientId = result.id;
+    if (!risk) {
+      throw new Error(
+        "The server response does not contain a risk result."
+      );
+    }
 
-  renderAnalyzeResult(
-    `${document.getElementById("name").value} ${
-      document.getElementById("surname").value
-    }`,
-    risk,
-    lastPatientId
-  );
+    lastPatientId = result.id;
 
-  loadHistory();
+    renderAnalyzeResult(
+      `${document.getElementById("name").value} ${
+        document.getElementById("surname").value
+      }`,
+      risk,
+      lastPatientId
+    );
+
+    await loadHistory();
+  } catch (error) {
+    console.error(
+      "Unable to analyze patient:",
+      error
+    );
+
+    const message = error.isUserSafe
+      ? error.message
+      : "Unable to process the patient data. Please try again.";
+
+    renderAnalyzeError(message);
+  }
 }
 
 // LOAD
